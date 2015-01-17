@@ -1,4 +1,4 @@
-python-pin
+Python_Pin
 ==========
 
 Python bindings for pin.
