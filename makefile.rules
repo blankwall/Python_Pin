@@ -81,30 +81,38 @@ LIB_ROOTS :=
 #
 ###############3
 
+CUSTOM_PYTHON_FLAGS := /opt/Python-2.7.8/libpython2.7.so.1.0 -L/opt/Python-2.7.8/build/ -L/opt/Python-2.7.8/ -L/opt/Python-2.7.8/build/lib.linux-x86_64-2.7 -fPIC -I/opt/Python-2.7.8/Include -rdynamic -I/opt/Python-2.7.8 -Xlinker -export-dynamic
+REGULAR_PYTHON_FLAGS := -lpython2.7 -I/usr/include/python2.7 -rdynamic
+ifeq ($(CUSTOM_PYTHON),true)
+    PYTHON_FLAGS := $(CUSTOM_PYTHON_FLAGS)
+else
+    PYTHON_FLAGS := $(REGULAR_PYTHON_FLAGS)
+endif
+
 # Build the intermediate object file.
 $(OBJDIR)Python_Pin$(OBJ_SUFFIX): Python_Pin.cpp
-	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $< -lpython2.7 -I/usr/include/python2.7 -rdynamic
+	$(CXX) $(PYTHON_FLAGS) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 # Build the intermediate object file.
 $(OBJDIR)IMG$(OBJ_SUFFIX): IMG.cpp IMG.h
-	$(CC) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $< -lpython2.7 -I/usr/include/python2.7 -rdynamic
+	$(CC) $(PYTHON_FLAGS) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 # Build the intermediate object file.
 $(OBJDIR)RTN$(OBJ_SUFFIX): RTN.cpp RTN.h
-	$(CC) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $< -lpython2.7 -I/usr/include/python2.7 -rdynamic
+	$(CC) $(PYTHON_FLAGS) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 $(OBJDIR)SYS$(OBJ_SUFFIX): SYS.cpp SYS.h
-	$(CC) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $< -lpython2.7 -I/usr/include/python2.7 -rdynamic
+	$(CC) $(PYTHON_FLAGS) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 $(OBJDIR)TRACE$(OBJ_SUFFIX): TRACE.cpp TRACE.h
-	$(CC) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $< -lpython2.7 -I/usr/include/python2.7 -rdynamic
+	$(CC) $(PYTHON_FLAGS) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 $(OBJDIR)INS$(OBJ_SUFFIX): INS.cpp INS.h
-	$(CC) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $< -lpython2.7 -I/usr/include/python2.7 -rdynamic
+	$(CC) $(PYTHON_FLAGS) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 $(OBJDIR)REG$(OBJ_SUFFIX): REG.cpp REG.h
-	$(CC) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $< -lpython2.7 -I/usr/include/python2.7 -rdynamic
+	$(CC) $(PYTHON_FLAGS) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 # Build the tool as a dll (shared object).
 $(OBJDIR)Python_Pin$(PINTOOL_SUFFIX): $(OBJDIR)Python_Pin$(OBJ_SUFFIX) $(OBJDIR)IMG$(OBJ_SUFFIX) IMG.h $(OBJDIR)RTN$(OBJ_SUFFIX) RTN.h $(OBJDIR)SYS$(OBJ_SUFFIX) SYS.h $(OBJDIR)TRACE$(OBJ_SUFFIX) TRACE.h $(OBJDIR)INS$(OBJ_SUFFIX) INS.h $(OBJDIR)REG$(OBJ_SUFFIX) REG.h
-	$(LINKER) $(TOOL_LDFLAGS_NOOPT) $(LINK_EXE)$@ $(^:%.h=) $(TOOL_LPATHS) $(TOOL_LIBS) -lpython2.7 -I/usr/include/python2.7 -rdynamic
+	$(LINKER) $(TOOL_LDFLAGS_NOOPT) $(LINK_EXE)$@ $(^:%.h=) $(TOOL_LPATHS) $(TOOL_LIBS) $(PYTHON_FLAGS)
