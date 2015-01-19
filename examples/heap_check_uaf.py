@@ -8,18 +8,23 @@ real = 0
 guard_size = 40
 new_size = 0
 log_file = open('uaf.txt', 'w')
-canary = 0x4141414141414141
+low = -1
+high = -1
+canary  = 0x0f0f0f0f0f0f0f0f
+canary2 = 0xf0f0f0f0f0f0f0f0
+k = 0
 
 def malloc_before(everything):
     global last_allocated_size
     last_allocated_size = everything['arg_0']
-    print "MALLOCING: " + hex(everything['arg_0'])
+   # print "MALLOCING: " + hex(everything['arg_0'])
+    new_size = guard_size*2+last_allocated_size
     pin.set_pointer(everything['reg_gdi'], pin.get_pointer(everything['reg_gdi'])+guard_size*2)
 
 def malloc_after(everything):
     global last_allocated_size
     address = everything['return']
-    print "MALLOC " + hex((pin.get_pointer(everything['reg_gax'])))
+    #print "MALLOC " + hex((pin.get_pointer(everything['reg_gax'])))
 
     pin.set_pointer((pin.get_pointer(everything['reg_gax'])), last_allocated_size)
     pin.set_pointer(pin.get_pointer(everything['reg_gax'])+8, canary)
@@ -30,15 +35,22 @@ def malloc_after(everything):
     pin.set_pointer(pin.get_pointer(everything['reg_gax'])+8+last_allocated_size+32+8, canary)
     pin.set_pointer(pin.get_pointer(everything['reg_gax'])+16+last_allocated_size+32+8, canary)
     pin.set_pointer(pin.get_pointer(everything['reg_gax'])+24+last_allocated_size+32+8, canary)
+
     pin.set_pointer(everything['reg_gax'], pin.get_pointer(everything['reg_gax'])+guard_size)
     
 def free(everything):
-    print "FREE " + hex(everything['arg_0'])
+    global low,high
+    #print "FREE " + hex(everything['arg_0'])
     addr = everything['arg_0']
     if addr == 0:
         return
+
     size = pin.get_pointer(pin.get_pointer(everything['reg_gdi'])-guard_size)
     free_list.append((addr,size+guard_size))
+
+    if low == -1:
+        low = addr
+    high = addr+size+guard_size
     pin.set_pointer(everything['reg_gdi'], 0)
 
 def realloc_before(everything):
@@ -73,18 +85,21 @@ def realloc_after(everything):
         pin.set_pointer(pin.get_pointer(everything['reg_gax'])+8+last_allocated_size+32+8, canary)
         pin.set_pointer(pin.get_pointer(everything['reg_gax'])+16+last_allocated_size+32+8, canary)
         pin.set_pointer(pin.get_pointer(everything['reg_gax'])+24+last_allocated_size+32+8, canary)
+
         pin.set_pointer(everything['reg_gax'], pin.get_pointer(everything['reg_gax'])+40)
     real = 0
 
 def handle_write(ins_info):
+    global low,high
     heap_read_addr = ins_info['MEM_OP0']
     x = ins_info['VAL']
-    if x == canary:
+    if x == canary or x == canary2:
         print "HEAP OVERFLOW located at 0x%x [%s]" % (heap_read_addr, ins_info['mnemonic'])
 
-    for i in free_list:
-        if heap_read_addr in range(i[0], i[0]+i[1]):            
-            print "UAF located at 0x%x [0x%x %s]" % (heap_read_addr, ins_info['IP'], ins_info['mnemonic'])
+    if heap_read_addr >= low and heap_read_addr <= high and high != -1 and low != -1:
+        for i in free_list:
+            if heap_read_addr in range(i[0], i[0]+i[1]):  
+                print "UAF located at 0x%x [0x%x %s]" % (heap_read_addr, ins_info['IP'], ins_info['mnemonic'])
 
 def ins_test(ins):
     if pin.INS_IsMemoryWrite(ins):
