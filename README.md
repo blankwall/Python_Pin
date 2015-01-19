@@ -24,4 +24,4 @@ To run a specific python script, for example the strace script:
 
 1. Some Python modules are compiled as shared objects without symbols. These modules can't be loaded from within the python pin tool. (solution is to either not use those modules, or have a custom build of python alongside the pintool)
 
-2. Need to merge the two branches to allow 32 and 64 bit support for both. 32 bit support is fully functional but is a few commits behind.
+2. Need to work on compiling for Mac and Windows. Code should be portable but makefile may need to be updated.
