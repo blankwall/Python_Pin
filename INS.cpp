@@ -2,7 +2,7 @@
 #include "pin.H"
 #include "INS.h"
 
-void INS_IPOINT_BEFORE(PyObject* callback, INS ins_object, UINT32 num_operands, unsigned int rax, unsigned int rbx, unsigned int rcx, unsigned int rdx, unsigned int rdi, unsigned int rsi, unsigned int rbp, unsigned int rsp, UINT64 memop0, unsigned int memop1, unsigned int memop2, unsigned int ea) {
+void INS_IPOINT_BEFORE(PyObject* callback, INS ins_object, UINT32 num_operands, unsigned int rax, unsigned int rbx, unsigned int rcx, unsigned int rdx, unsigned int rdi, unsigned int rsi, unsigned int rbp, unsigned int rsp, UINT64 memop0, unsigned int memop1, unsigned int memop2) {
     PyObject* dict = PyDict_New();
     PyObject* arguments = PyTuple_New(1);
 
@@ -53,7 +53,7 @@ void INS_IPOINT_BEFORE(PyObject* callback, INS ins_object, UINT32 num_operands, 
     PyDict_SetItemString(dict, "REG_RBP", PyInt_FromLong(rbp));
     PyDict_SetItemString(dict, "REG_RSP", PyInt_FromLong(rsp));
     PyDict_SetItemString(dict, "IP", PyInt_FromLong(INS_Address(ins_object)));
-    PyDict_SetItemString(dict, "EA", PyInt_FromLong(ea));
+   // PyDict_SetItemString(dict, "EA", PyInt_FromLong(ea));
     PyDict_SetItemString(dict, "mnemonic", PyString_FromString(INS_Disassemble(ins_object).c_str()));
     switch (num_operands) {
         case 0:
@@ -127,7 +127,6 @@ PyObject* Python_INS_InsertCall(PyObject* self, PyObject* args) {
             (num_operands >= 2 ? IARG_MEMORYOP_EA : IARG_UINT32), 1,
             (num_operands >= 3 ? IARG_MEMORYOP_EA : IARG_UINT32), 2,
             #endif
-            IARG_MEMORYWRITE_EA ,
             IARG_END
         );
         return Py_BuildValue("O", Py_True);
