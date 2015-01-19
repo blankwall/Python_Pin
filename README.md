@@ -6,6 +6,8 @@ Python bindings for pin.
 
 # Build Instructions
 
+Pre-requisite is python-dev `sudo apt-get install python-dev` on Ubuntu.
+
 Copy the entire directory into ~/pin/source/tools
 
 Type make and enjoy!
