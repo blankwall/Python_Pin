@@ -1,7 +1,12 @@
 import sys, pin
 total = 0
 info = file("inscount.out", "w")
-unistd = open("/usr/include/x86_64-linux-gnu/asm/unistd_64.h").read().split("\n")
+unistd = None
+if sys.maxsize > 2**32:
+	unistd = open("/usr/include/x86_64-linux-gnu/asm/unistd_64.h").read().split("\n")
+else:
+	unistd = open("/usr/include/i386-linux-gnu/asm/unistd_32.h").read().split("\n")
+	
 syscalls = []
 for line in unistd:
     if "define __NR" in line:
