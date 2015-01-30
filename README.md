@@ -8,6 +8,8 @@ Python bindings for pin.
 
 Pre-requisite is python-dev `sudo apt-get install python-dev` on Ubuntu.
 
+Download and extract Pin from https://software.intel.com/en-us/articles/pintool-downloads
+
 Copy the entire directory into ~/pin/source/tools
 
 Type make and enjoy!
