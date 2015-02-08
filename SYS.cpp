@@ -1,4 +1,4 @@
-#include </usr/include/python2.7/Python.h>
+#include <Python.h>
 #include "pin.H"
 
 PyObject* Python_PIN_GetSyscallArgument(PyObject* self, PyObject* args) {
