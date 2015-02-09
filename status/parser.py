@@ -2,7 +2,7 @@ import sys
 
 input_data = open('/tmp/indb.txt').read().split("\n")
 functions = []
-headers = """#include </usr/include/python2.7/Python.h>
+headers = """#include <Python.h>
 #include "pin.H"
 #include "INS.h"
 """
