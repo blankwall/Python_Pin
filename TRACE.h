@@ -2,35 +2,35 @@
 #define E_H
 
 /* TRACE STUFF */
-PyObject* Python_TRACE_Address(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_BblHead(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_Original(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_InsertCall(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_InsertIfCall(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_InsertThenCall(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_BblTail(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_Size(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_Rtn(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_HasFallThrough(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_NumBbl(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_NumIns(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_StubSize(PyObject* self, PyObject* args);
+SPPY::PyObject* Python_TRACE_Address(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_BblHead(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_Original(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_InsertCall(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_InsertIfCall(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_InsertThenCall(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_BblTail(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_Size(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_Rtn(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_HasFallThrough(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_NumBbl(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_NumIns(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_StubSize(SPPY::PyObject* self, SPPY::PyObject* args);
 
 /* BBL STUFF */
 
-PyObject* Python_BBL_MoveAllAttributes(PyObject* self, PyObject* args);
-PyObject* Python_BBL_NumIns(PyObject* self, PyObject* args);
-PyObject* Python_BBL_InsHead(PyObject* self, PyObject* args);
-PyObject* Python_BBL_InsTail(PyObject* self, PyObject* args);
-PyObject* Python_BBL_Next(PyObject* self, PyObject* args);
-PyObject* Python_BBL_Prev(PyObject* self, PyObject* args);
-PyObject* Python_BBL_Valid(PyObject* self, PyObject* args);
-PyObject* Python_BBL_Original(PyObject* self, PyObject* args);
-PyObject* Python_BBL_Address(PyObject* self, PyObject* args);
-PyObject* Python_BBL_Size(PyObject* self, PyObject* args);
-PyObject* Python_BBL_InsertCall(PyObject* self, PyObject* args);
-PyObject* Python_BBL_InsertIfCall(PyObject* self, PyObject* args);
-PyObject* Python_BBL_InsertThenCall(PyObject* self, PyObject* args);
-PyObject* Python_BBL_HasFallThrough(PyObject* self, PyObject* args);
+SPPY::PyObject* Python_BBL_MoveAllAttributes(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_NumIns(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_InsHead(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_InsTail(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_Next(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_Prev(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_Valid(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_Original(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_Address(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_Size(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_InsertCall(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_InsertIfCall(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_InsertThenCall(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_BBL_HasFallThrough(SPPY::PyObject* self, SPPY::PyObject* args);
 
 #endif

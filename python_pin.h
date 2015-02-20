@@ -1,36 +1,36 @@
 #ifndef B_H
 #define B_H
 
-PyObject* module;
-PyObject** hooks_syscall_entry = NULL;
-PyObject** hooks_syscall_exit = NULL;
-PyObject** hooks_instrument_function = NULL;
-PyObject** hooks_img_load = NULL;
-PyObject** hooks_img_unload = NULL;
-PyObject** hooks_trace_instrument = NULL;
-PyObject** hooks_instruction = NULL;
-PyObject** fini_functions = NULL;
+SPPY::PyObject* module;
+SPPY::PyObject** hooks_syscall_entry = NULL;
+SPPY::PyObject** hooks_syscall_exit = NULL;
+SPPY::PyObject** hooks_instrument_function = NULL;
+SPPY::PyObject** hooks_img_load = NULL;
+SPPY::PyObject** hooks_img_unload = NULL;
+SPPY::PyObject** hooks_trace_instrument = NULL;
+SPPY::PyObject** hooks_instruction = NULL;
+SPPY::PyObject** fini_functions = NULL;
 
 void initialize_pin_module();
 
-void add_hook(PyObject*** hooks, PyObject* new_hook);
+void add_hook(SPPY::PyObject*** hooks, SPPY::PyObject* new_hook);
 
 void SyscallEntry(THREADID threadIndex, CONTEXT *ctxt, SYSCALL_STANDARD std, VOID *v);
 void SyscallExit(THREADID threadIndex, CONTEXT *ctxt, SYSCALL_STANDARD std, VOID* v);
-PyObject* Python_PIN_AddSyscallExitFunction(PyObject* self, PyObject* args);
-PyObject* Python_PIN_AddSyscallEntryFunction(PyObject* self, PyObject* args);
-PyObject* Python_TRACE_AddInstrumentFunction(PyObject* self, PyObject* args);
+SPPY::PyObject* Python_PIN_AddSyscallExitFunction(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_PIN_AddSyscallEntryFunction(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_TRACE_AddInstrumentFunction(SPPY::PyObject* self, SPPY::PyObject* args);
 void Fini(INT32, VOID*);
-PyObject* Python_AddFiniFunction(PyObject* self, PyObject* args);
-PyObject* Python_INS_AddInstrumentFunction(PyObject* self, PyObject* args);
+SPPY::PyObject* Python_AddFiniFunction(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_INS_AddInstrumentFunction(SPPY::PyObject* self, SPPY::PyObject* args);
 
 void InstrumentFunction(RTN rtn, VOID *v);
-PyObject* Python_RTN_AddInstrumentFunction(PyObject* self, PyObject* args);
-PyObject* get_pointer(PyObject* self, PyObject* args);
-PyObject* set_pointer(PyObject* self, PyObject* args);
+SPPY::PyObject* Python_RTN_AddInstrumentFunction(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* get_pointer(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* set_pointer(SPPY::PyObject* self, SPPY::PyObject* args);
 
 typedef struct rtn_hook {
-    PyObject* function;
+    SPPY::PyObject* function;
     int arguments;
 } rtn_hook;
 
@@ -39,8 +39,10 @@ void ImageUnload(IMG img, VOID *v);
 void Trace(TRACE trace, VOID *v);
 void Ins_Hook(INS ins, VOID *v);
 
+///static (_Py_NoneStruct) methods2[];
 
-static PyMethodDef methods[] = {
+static SPPY::PyMethodDef methods[] = {
+//static (SPPY::_Py_NoneStruct) methods[] = {
     {"AddFiniFunction",
         Python_AddFiniFunction,
         METH_VARARGS,
