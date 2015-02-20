@@ -1,10 +1,10 @@
 #ifndef D_H
 #define D_H
 
-PyObject* Python_PIN_GetSyscallArgument(PyObject* self, PyObject* args);
-PyObject* Python_PIN_GetSyscallReturn(PyObject* self, PyObject* args);
-PyObject* Python_PIN_GetSyscallNumber(PyObject* self, PyObject* args);
-PyObject* Python_PIN_SetSyscallArgument(PyObject* self, PyObject* args);
-PyObject* Python_PIN_SetSyscallNumber(PyObject* self, PyObject* args);
+SPPY::PyObject* Python_PIN_GetSyscallArgument(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_PIN_GetSyscallReturn(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_PIN_GetSyscallNumber(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_PIN_SetSyscallArgument(SPPY::PyObject* self, SPPY::PyObject* args);
+SPPY::PyObject* Python_PIN_SetSyscallNumber(SPPY::PyObject* self, SPPY::PyObject* args);
 
 #endif
