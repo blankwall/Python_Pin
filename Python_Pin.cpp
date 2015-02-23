@@ -1,25 +1,27 @@
-#include <Python.h>
-//#include <Python.h>
 #include "pin.H"
+namespace SPPY 
+{
+#include <Python.h>
+}
 #include "IMG.h"
 #include "INS.h"
 #include "RTN.h"
 #include "SYS.h"
 #include "TRACE.h"
 #include "./python_pin.h"
-#include <strings.h>
+#include <string.h>
 #include <stdlib.h>
 
-void add_hook(PyObject*** hooks, PyObject* new_hook) {
-    PyObject** hooks_list = *hooks;
+void add_hook(SPPY::PyObject*** hooks, SPPY::PyObject* new_hook) {
+    SPPY::PyObject** hooks_list = *hooks;
     if (hooks_list == NULL) {
-        hooks_list = (PyObject**) malloc(sizeof(PyObject*)*2);
+        hooks_list = (SPPY::PyObject**) malloc(sizeof(SPPY::PyObject*)*2);
         hooks_list[0] = new_hook;
         hooks_list[1] = NULL;
     } else {
         int hook_count;
         for(hook_count=0; hooks_list[hook_count]; hook_count++);
-        hooks_list = (PyObject**) realloc(hooks_list, sizeof(PyObject*)*(hook_count+2));
+        hooks_list = (SPPY::PyObject**) realloc(hooks_list, sizeof(SPPY::PyObject*)*(hook_count+2));
         hooks_list[hook_count] = new_hook;
         hooks_list[hook_count+1] = NULL;
     }
@@ -29,131 +31,133 @@ void add_hook(PyObject*** hooks, PyObject* new_hook) {
 
 void Fini(INT32, VOID*) {
     for (int i=0; fini_functions[i]; i++) {
-        if (PyObject_CallObject(fini_functions[i], NULL) == NULL) {
-            PyErr_Print();
+        if (SPPY::PyObject_CallObject(fini_functions[i], NULL) == NULL) {
+            SPPY::PyErr_Print();
             exit(1);
         }
     }
     return;
 }
 
-PyObject* Python_AddFiniFunction(PyObject* self, PyObject* args) {
-    PyObject* callback;
-    PyObject* v;
+SPPY::PyObject* Python_AddFiniFunction(SPPY::PyObject* self, SPPY::PyObject* args) {
+    SPPY::PyObject* callback;
+    SPPY::PyObject* v;
     PyArg_ParseTuple(args, "O|O", &callback, &v);
 
     if (!PyCallable_Check(callback)) {
-        return Py_BuildValue("O", Py_False);
+        return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_ZeroStruct));
     }
 
     add_hook(&fini_functions, callback);
-    return Py_BuildValue("O", Py_True);
+    return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_TrueStruct));
 } 
 
-PyObject* Python_TRACE_AddInstrumentFunction(PyObject* self, PyObject* args) {
-    PyObject* callback;
-    PyObject* v;
+SPPY::PyObject* Python_TRACE_AddInstrumentFunction(SPPY::PyObject* self, SPPY::PyObject* args) {
+    SPPY::PyObject* callback;
+    SPPY::PyObject* v;
     PyArg_ParseTuple(args, "O|O", &callback, &v);
 
     if (!PyCallable_Check(callback)) {
-        return Py_BuildValue("O", Py_False);
+        return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_ZeroStruct));
     }
 
     add_hook(&hooks_trace_instrument, callback);
-    return Py_BuildValue("O", Py_True);
+    return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_TrueStruct));
 } 
 
-PyObject* Python_INS_AddInstrumentFunction(PyObject* self, PyObject* args) {
-    PyObject* callback;
-    PyObject* v;
+SPPY::PyObject* Python_INS_AddInstrumentFunction(SPPY::PyObject* self, SPPY::PyObject* args) {
+    SPPY::PyObject* callback;
+    SPPY::PyObject* v;
     PyArg_ParseTuple(args, "O|O", &callback, &v);
 
     if (!PyCallable_Check(callback)) {
-        return Py_BuildValue("O", Py_False);
+        return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_ZeroStruct));
     }
 
     add_hook(&hooks_instruction, callback);
-    return Py_BuildValue("O", Py_True);
+    return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_TrueStruct));
 } 
 
-PyObject* Python_IMG_AddInstrumentFunction(PyObject* self, PyObject* args) {
-    PyObject* callback;
-    PyObject* v;
+SPPY::PyObject* Python_IMG_AddInstrumentFunction(SPPY::PyObject* self, SPPY::PyObject* args) {
+    SPPY::PyObject* callback;
+    SPPY::PyObject* v;
     PyArg_ParseTuple(args, "O|O", &callback, &v);
 
     if (!PyCallable_Check(callback)) {
-        return Py_BuildValue("O", Py_False);
+        return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_ZeroStruct));
     }
 
     add_hook(&hooks_img_load, callback);
-    return Py_BuildValue("O", Py_True);
+    return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_TrueStruct));
 }
 
-PyObject* Python_IMG_AddUnloadFunction(PyObject* self, PyObject* args) {
-    PyObject* callback;
-    PyObject* v;
+SPPY::PyObject* Python_IMG_AddUnloadFunction(SPPY::PyObject* self, SPPY::PyObject* args) {
+    SPPY::PyObject* callback;
+    SPPY::PyObject* v;
     PyArg_ParseTuple(args, "O|O", &callback, &v);
 
     if (!PyCallable_Check(callback)) {
-        return Py_BuildValue("O", Py_False);
+        return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_ZeroStruct));
     }
 
     add_hook(&hooks_img_unload, callback);
-    return Py_BuildValue("O", Py_True);
+    return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_TrueStruct));
 }
 
-PyObject* Python_RTN_AddInstrumentFunction(PyObject* self, PyObject* args) {
-    PyObject* callback = (PyObject*) malloc(sizeof(PyObject));
+SPPY::PyObject* Python_RTN_AddInstrumentFunction(SPPY::PyObject* self, SPPY::PyObject* args) {
+    SPPY::PyObject* callback = (SPPY::PyObject*) malloc(sizeof(SPPY::PyObject));
     PyArg_ParseTuple(args, "O", &callback);
 
     if (!PyCallable_Check(callback)) {
-        return Py_BuildValue("O", Py_False);
+        return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_ZeroStruct));
     }
 
     add_hook(&hooks_instrument_function, callback);
-    return Py_BuildValue("O", Py_True);
+    return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_TrueStruct));
 }
 
 
 
-PyObject* Python_PIN_AddSyscallExitFunction(PyObject* self, PyObject* args) {
-    PyObject* callback = (PyObject*) malloc(sizeof(PyObject));
+SPPY::PyObject* Python_PIN_AddSyscallExitFunction(SPPY::PyObject* self, SPPY::PyObject* args) {
+    SPPY::PyObject* callback = (SPPY::PyObject*) malloc(sizeof(SPPY::PyObject));
     PyArg_ParseTuple(args, "O", &callback);
 
     if (!PyCallable_Check(callback)) {
-        return Py_BuildValue("O", Py_False);
+        return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_ZeroStruct));
     }
 
     add_hook(&hooks_syscall_exit, callback);
-    return Py_BuildValue("O", Py_True);
+    return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_TrueStruct));
 }
 
-PyObject* Python_PIN_AddSyscallEntryFunction(PyObject* self, PyObject* args) {
-    PyObject* callback = (PyObject*) malloc(sizeof(PyObject));
+SPPY::PyObject* Python_PIN_AddSyscallEntryFunction(SPPY::PyObject* self, SPPY::PyObject* args) {
+    SPPY::PyObject* callback = (SPPY::PyObject*) malloc(sizeof(SPPY::PyObject));
     PyArg_ParseTuple(args, "O", &callback);
 
     if (!PyCallable_Check(callback)) {
-        return Py_BuildValue("O", Py_False);
+        return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_ZeroStruct));
     }
 
     add_hook(&hooks_syscall_entry, callback);
-    return Py_BuildValue("O", Py_True);
+    return SPPY::Py_BuildValue("O", ((SPPY::PyObject *) &SPPY::_Py_TrueStruct));
 }
 
 KNOB<string> KnobPythonModule(KNOB_MODE_WRITEONCE, "pintool", "m", "", "the python pintool to import");
 int main(int argc, char** argv) {
     PIN_InitSymbols();
-    Py_Initialize();
-    PyRun_SimpleString("import sys; sys.path.append('.')\n");
+	 SPPY::Py_Initialize();
+	 SPPY::PyRun_SimpleString("import sys; sys.path.append('.')\n");
     if (PIN_Init(argc, argv)) {
         printf("Failed to initialize pin.\n");
         exit(1);
     }
 
-    PyObject* pin_module = Py_InitModule("pin", methods);
+	 SPPY::PyObject* pin_module = 
+		 Py_InitModule4("pin", methods, (char *)NULL, (SPPY::PyObject *)NULL, PYTHON_API_VERSION);
+    //PyObject* pin_module = Py_InitModule("pin", methods);
     if (pin_module == NULL) {
         printf("Failed to initialize internal pin module\n");
-        PyErr_Print();
+        SPPY::PyErr_Print();
         exit(1);
     }
 
@@ -251,15 +255,18 @@ int main(int argc, char** argv) {
     PyModule_AddIntConstant(pin_module, "CALL_ORDER_DEFAULT", CALL_ORDER_DEFAULT);
     PyModule_AddIntConstant(pin_module, "CALL_ORDER_LAST", CALL_ORDER_LAST);
 
-    const char* filename = KnobPythonModule.Value().c_str();
-    FILE* tool = fopen(filename, "r");
-    if (tool == NULL) {
-        perror("fopen");
-        exit(1);
-    }
+     const char* filename = KnobPythonModule.Value().c_str();
+//     FILE* tool = fopen(filename, "r");
+//     if (tool == NULL) {
+//         perror("fopen");
+//         exit(1);
+//     }
+// 
+//     PyRun_SimpleFile(tool, filename);
+//     fclose(tool);
 
-    PyRun_SimpleFile(tool, filename);
-    fclose(tool);
+	 SPPY::PyObject* PyFileObject = SPPY::PyFile_FromString((char *)filename, "r");
+	 SPPY::PyRun_SimpleFile(SPPY::PyFile_AsFile(PyFileObject), filename);
 
     if (fini_functions) {
         PIN_AddFiniFunction(Fini, 0);
@@ -294,17 +301,17 @@ int main(int argc, char** argv) {
 
     PIN_StartProgram();
 
-    Py_Finalize();
+	 SPPY::Py_Finalize();
     return 0;
 }
 
 void Ins_Hook(INS ins, VOID *v){
-    PyObject* arguments = PyTuple_New(1);
-    PyTuple_SetItem(arguments, 0, PyInt_FromLong((long int)&ins));
+    SPPY::PyObject* arguments = SPPY::PyTuple_New(1);
+    PyTuple_SetItem(arguments, 0, SPPY::PyInt_FromLong((long int)&ins));
 
     for (int i=0; hooks_instruction[i]; i++) {
-        if (PyObject_CallObject(hooks_instruction[i], arguments) == NULL) {
-            PyErr_Print();
+        if (SPPY::PyObject_CallObject(hooks_instruction[i], arguments) == NULL) {
+            SPPY::PyErr_Print();
             exit(1);
         }
     }
@@ -312,12 +319,12 @@ void Ins_Hook(INS ins, VOID *v){
 }
 
 void Trace(TRACE trace, VOID *v){
-    PyObject* arguments = PyTuple_New(1);
-    PyTuple_SetItem(arguments, 0, PyInt_FromLong((long int)&trace));
+    SPPY::PyObject* arguments = SPPY::PyTuple_New(1);
+    PyTuple_SetItem(arguments, 0, SPPY::PyInt_FromLong((long int)&trace));
 
     for (int i=0; hooks_trace_instrument[i]; i++) {
-        if (PyObject_CallObject(hooks_trace_instrument[i], arguments) == NULL) {
-            PyErr_Print();
+        if (SPPY::PyObject_CallObject(hooks_trace_instrument[i], arguments) == NULL) {
+            SPPY::PyErr_Print();
             exit(1);
         }
     }
@@ -325,62 +332,62 @@ void Trace(TRACE trace, VOID *v){
 }
 
 void InstrumentFunction(RTN rtn, VOID *v) {
-    PyObject* arguments = PyTuple_New(1);
-    PyTuple_SetItem(arguments, 0, PyInt_FromLong((long int)&rtn));
+    SPPY::PyObject* arguments = SPPY::PyTuple_New(1);
+    PyTuple_SetItem(arguments, 0, SPPY::PyInt_FromLong((long int)&rtn));
 
     for (int i=0; hooks_instrument_function[i]; i++) {
-        if (PyObject_CallObject(hooks_instrument_function[i], arguments) == NULL) {
-            PyErr_Print();
+        if (SPPY::PyObject_CallObject(hooks_instrument_function[i], arguments) == NULL) {
+            SPPY::PyErr_Print();
             exit(1);
         }
     }
 }
 
 void SyscallExit(THREADID threadIndex, CONTEXT *ctxt, SYSCALL_STANDARD std, VOID *v) {
-    PyObject* arguments = PyTuple_New(2);
-    PyTuple_SetItem(arguments, 0, PyInt_FromLong((long int)&ctxt));
-    PyTuple_SetItem(arguments, 1, PyInt_FromLong((long int)&std));
+    SPPY::PyObject* arguments = SPPY::PyTuple_New(2);
+    PyTuple_SetItem(arguments, 0, SPPY::PyInt_FromLong((long int)&ctxt));
+    PyTuple_SetItem(arguments, 1, SPPY::PyInt_FromLong((long int)&std));
 
     for (int i=0; hooks_syscall_entry[i]; i++) {
-        if (PyObject_CallObject(hooks_syscall_exit[i], arguments) == NULL) {
-            PyErr_Print();
+        if (SPPY::PyObject_CallObject(hooks_syscall_exit[i], arguments) == NULL) {
+            SPPY::PyErr_Print();
             exit(1);
         }
     }
 }
 
 void SyscallEntry(THREADID threadIndex, CONTEXT *ctxt, SYSCALL_STANDARD std, VOID *v) {
-    PyObject* arguments = PyTuple_New(2);
-    PyTuple_SetItem(arguments, 0, PyInt_FromLong((long int)&ctxt));
-    PyTuple_SetItem(arguments, 1, PyInt_FromLong((long int)&std));
+    SPPY::PyObject* arguments = SPPY::PyTuple_New(2);
+    PyTuple_SetItem(arguments, 0, SPPY::PyInt_FromLong((long int)&ctxt));
+    PyTuple_SetItem(arguments, 1, SPPY::PyInt_FromLong((long int)&std));
 
     for (int i=0; hooks_syscall_entry[i]; i++) {
-        if (PyObject_CallObject(hooks_syscall_entry[i], arguments) == NULL) {
-            PyErr_Print();
+        if (SPPY::PyObject_CallObject(hooks_syscall_entry[i], arguments) == NULL) {
+            SPPY::PyErr_Print();
             exit(1);
         }
     }
 }
 
 void ImageLoad(IMG img, VOID *v) {
-    PyObject* arguments = PyTuple_New(1);
-    PyTuple_SetItem(arguments, 0, PyInt_FromLong((long int)&img));
+    SPPY::PyObject* arguments = SPPY::PyTuple_New(1);
+    PyTuple_SetItem(arguments, 0, SPPY::PyInt_FromLong((long int)&img));
 
     for (int i=0; hooks_img_load[i]; i++) {
-        if (PyObject_CallObject(hooks_img_load[i], arguments) == NULL) {
-            PyErr_Print();
+        if (SPPY::PyObject_CallObject(hooks_img_load[i], arguments) == NULL) {
+            SPPY::PyErr_Print();
             exit(1);
         }
     }
 }
 
 void ImageUnload(IMG img, VOID* v) {
-    PyObject* arguments = PyTuple_New(1);
-    PyTuple_SetItem(arguments, 0, PyInt_FromLong((long int)&img));
+    SPPY::PyObject* arguments = SPPY::PyTuple_New(1);
+    PyTuple_SetItem(arguments, 0, SPPY::PyInt_FromLong((long int)&img));
 
     for (int i=0; hooks_img_unload[i]; i++) {
-        if (PyObject_CallObject(hooks_img_unload[i], arguments) == NULL) {
-            PyErr_Print();
+        if (SPPY::PyObject_CallObject(hooks_img_unload[i], arguments) == NULL) {
+            SPPY::PyErr_Print();
             exit(1);
         }
     }

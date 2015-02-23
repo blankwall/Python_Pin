@@ -27,3 +27,47 @@ To run a specific python script, for example the strace script:
 1. Some Python modules are compiled as shared objects without symbols. These modules can't be loaded from within the python pin tool. (solution is to either not use those modules, or have a custom build of python alongside the pintool)
 
 2. Need to work on compiling for Mac and Windows. Code should be portable but makefile may need to be updated.
+
+====================================================
+# REMARK on Windows
+====================================================
+I compiled the project Python_Pin on Windows under MS Visual Studio 2005 but I found errors at compile time.
+
+Files pin.h and python.h should be different namespace.
+
+I placed python.h in namespace SPPY:
+
+`namespace SPPY` 
+
+`{`
+
+`#include <Python.h>`
+
+`}`
+
+This helped
+
+This code don't work on Windows:
+
+`//     FILE* tool = fopen(filename, "r");`
+
+`//     if (tool == NULL) {`
+
+`//         perror("fopen");`
+
+`//         exit(1);`
+
+`//     }`
+
+`//`
+
+`// 	 SPPY::PyRun_SimpleFile(tool, filename);`
+
+`//     fclose(tool);`
+
+And replace on this code:
+
+	 SPPY::PyObject* PyFileObject = SPPY::PyFile_FromString((char *)filename, "r");
+
+	 SPPY::PyRun_SimpleFile(SPPY::PyFile_AsFile(PyFileObject), filename);
+
